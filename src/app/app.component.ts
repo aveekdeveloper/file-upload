@@ -14,7 +14,7 @@ export class AppComponent implements OnInit{
   settings = {
     actions: {
       add: false,
-      edit: false,
+      edit: true,
       delete: false,
     },
     columns: {
@@ -30,16 +30,19 @@ export class AppComponent implements OnInit{
       formula: {
         title: 'Formula'
       }
+    },
+    pager: {
+      perPage: 30
     }
   };
 
   data: LocalDataSource = new LocalDataSource();;
 
   public files: UploadFile[] = [];
- 
+
   // Changes XML to JSON
   xmlToJson(xml) {
-    
+
     // Create the return object
     var obj = {};
 
@@ -114,11 +117,11 @@ export class AppComponent implements OnInit{
       reader.readAsText(input.files[index]);
     };
   }
- 
+
   public fileOver(event){
     console.log(event);
   }
- 
+
   public fileLeave(event){
     console.log(event);
   }
