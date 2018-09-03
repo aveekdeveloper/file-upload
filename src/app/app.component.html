@@ -1,8 +1,11 @@
-<div class="file-upload">
+<div class= "container">
+<div class="row">
+
+<div class="file-upload col">
   <div class="image-upload-wrap">
     <input class="file-upload-input" (change)='openFile($event)' type='file' accept="text/twb" />
     <div class="drag-text">
-      <h3>Drag and drop a file or select add Image</h3>
+      <h3>Drag and drop a *.twb file</h3>
     </div>
   </div>
   <div class="file-upload-content">
@@ -13,4 +16,13 @@
   </div>
 </div>
 
-<ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
+<div class="export-csv col">
+  <button type="button" class="btn btn-primary btn-lg" (click)="exportDataToCsv()">Export to CSV<span class="material-icons">get_app</span></button>
+</div>
+
+</div>
+</div>
+
+<div>
+  <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
+</div>

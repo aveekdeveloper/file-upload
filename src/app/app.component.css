@@ -5,9 +5,9 @@ body {
 
 .file-upload {
   background-color: #ffffff;
-  width: 600px;
+  width: 200px;
   margin: 0 auto;
-  padding: 20px;
+  /*padding: 20px;*/
 }
 
 .file-upload-btn {
@@ -21,7 +21,7 @@ body {
   border-bottom: 4px solid #15824B;
   transition: all .2s ease;
   outline: none;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   font-weight: 700;
 }
 
@@ -113,4 +113,8 @@ body {
 .remove-image:active {
   border: 0;
   transition: all .2s ease;
+}
+
+.export-csv {
+  padding-top: 80px;
 }

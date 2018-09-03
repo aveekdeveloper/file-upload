@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { UploadEvent, UploadFile } from 'ngx-file-drop';
 import {  FileUploader, FileSelectDirective } from 'ng2-file-upload/ng2-file-upload';
 import { LocalDataSource } from 'ng2-smart-table';
+import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,9 @@ export class AppComponent implements OnInit{
       position: 'right',
     },
     edit: {
-      //editButtonContent: '<i class="oi oi-pencil"></i>'
+      editButtonContent: '<i class="material-icons">create</i>',
+      saveButtonContent: '<i class="material-icons">save</i>',
+      cancelButtonContent: '<i class="material-icons">clear</i>',
     },
     columns: {
       dscaption: {
@@ -46,7 +49,15 @@ export class AppComponent implements OnInit{
     }
   };
 
-  data: LocalDataSource = new LocalDataSource();;
+  csvexportsettings = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalseparator: '.',
+    showLabels: true,
+    headers: ["Datasource Caption", "Datasource Name", "Col Caption","Col Name","Formula","Description"]
+  };
+
+  data: LocalDataSource = new LocalDataSource();
 
   public files: UploadFile[] = [];
 
@@ -122,11 +133,21 @@ export class AppComponent implements OnInit{
           var doc = parser.parseFromString(text, "application/xml");
           var jsonText = JSON.stringify(this.xmlToJson(doc));
           var final = JSON.parse(jsonText);
-          console.log("final ===> " + final.workbook.datasources.datasource);
+          //console.log("final ===> " + final.workbook.datasources.datasource);
           this.updateTable(final);
       }
       reader.readAsText(input.files[index]);
     };
+  }
+
+  exportDataToCsv(){
+    const settings = this.csvexportsettings;
+    this.data.getAll().then(function(result){
+      new Angular5Csv(result, 'Twb Report',settings);
+    }, function(err){
+      alert("No data to export");
+    })
+
   }
 
   public fileOver(event){
