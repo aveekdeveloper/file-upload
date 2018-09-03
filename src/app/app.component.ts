@@ -16,16 +16,23 @@ export class AppComponent implements OnInit{
       add: false,
       edit: true,
       delete: false,
+      position: 'right',
+    },
+    edit: {
+      //editButtonContent: '<i class="oi oi-pencil"></i>'
     },
     columns: {
-      datasource: {
-        title: 'Datasource'
+      dscaption: {
+        title: 'DS Caption'
       },
-      Caption: {
-        title: 'Caption'
+      dsname: {
+        title: 'DS Name'
       },
-      name: {
-        title: 'Name'
+      colcaption: {
+        title: 'Col Caption'
+      },
+      colname: {
+        title: 'Col Name'
       },
       formula: {
         title: 'Formula'
@@ -93,9 +100,10 @@ export class AppComponent implements OnInit{
             formula = final.workbook.datasources.datasource[i].column[j]['calculation']['@attributes'].formula;
           }
           newData.push({
-            datasource: final.workbook.datasources.datasource[i]['@attributes'].name,
-            Caption: final.workbook.datasources.datasource[i].column[j]['@attributes'].caption,
-            name: final.workbook.datasources.datasource[i].column[j]['@attributes'].name,
+            dscaption: final.workbook.datasources.datasource[i]['@attributes'].caption,
+            dsname: final.workbook.datasources.datasource[i]['@attributes'].name,
+            colcaption: final.workbook.datasources.datasource[i].column[j]['@attributes'].caption,
+            colname: final.workbook.datasources.datasource[i].column[j]['@attributes'].name,
             formula: formula
           });
         }
