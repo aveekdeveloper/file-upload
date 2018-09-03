@@ -29,6 +29,9 @@ export class AppComponent implements OnInit{
       },
       formula: {
         title: 'Formula'
+      },
+      comments: {
+        title: 'Description'
       }
     },
     pager: {
