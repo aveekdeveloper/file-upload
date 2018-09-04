@@ -1,28 +1,19 @@
-<div class= "container">
-<div class="row">
+<header class="toolbar toolbar-header">
 
-<div class="file-upload col">
-  <div class="image-upload-wrap">
-    <input class="file-upload-input" (change)='openFile($event)' type='file' accept="text/twb" />
-    <div class="drag-text">
-      <h3>Drag and drop a *.twb file</h3>
-    </div>
+  <div class="toolbar-actions">
+
+    <input class="btn btn-default" (change)='openFile($event)' type='file' accept="text/twb" />
+
+    <button class="btn btn-default" (click)="exportDataToCsv()">
+      <span class="icon icon-level-down"></span>
+      Download CSV
+    </button>
   </div>
-  <div class="file-upload-content">
-    <img class="file-upload-image" src="#" alt="your image" />
-    <div class="image-title-wrap">
-      <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
-    </div>
+</header>
+
+<div class="window-content">
+  <div class="result-table table-striped">
+    <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
   </div>
-</div>
 
-<div class="export-csv col">
-  <button type="button" class="btn btn-primary btn-lg" (click)="exportDataToCsv()">Export to CSV<span class="material-icons">get_app</span></button>
-</div>
-
-</div>
-</div>
-
-<div>
-  <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
 </div>
