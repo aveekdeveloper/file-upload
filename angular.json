@@ -24,7 +24,7 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/css/photon.min.css"
+              "src/assets/css/photon.css"
             ],
             "scripts": []
           },

@@ -1,7 +1,16 @@
-.result-table {
-  overflow-y: scroll;
+.ngsmarttablediv{
+  width:100%;
+  font-family: courier;
+  font-size:100%;
+  line-height:1.5;
 }
 
 .window {
   overflow-y: scroll;
+}
+
+.toolbar-actions{
+  width:500px;
+  margin-left: auto;
+  margin-right: auto;
 }

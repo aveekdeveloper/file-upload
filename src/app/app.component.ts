@@ -17,7 +17,7 @@ export class AppComponent implements OnInit{
       add: false,
       edit: true,
       delete: false,
-      position: 'right',
+      position: 'left',
     },
     edit: {
       editButtonContent: '<i class="material-icons">create</i>',
@@ -28,17 +28,21 @@ export class AppComponent implements OnInit{
       dscaption: {
         title: 'DS Caption'
       },
-      dsname: {
+      /*dsname: {
         title: 'DS Name'
-      },
+      },*/
       colcaption: {
         title: 'Col Caption'
       },
-      colname: {
+      /*colname: {
         title: 'Col Name'
-      },
+      },*/
       formula: {
-        title: 'Formula'
+        title: 'Formula',
+        width: '60%',
+        editor: {
+          type: 'textarea'
+        }
       },
       comments: {
         title: 'Description'
@@ -112,9 +116,9 @@ export class AppComponent implements OnInit{
           }
           newData.push({
             dscaption: final.workbook.datasources.datasource[i]['@attributes'].caption,
-            dsname: final.workbook.datasources.datasource[i]['@attributes'].name,
+            //dsname: final.workbook.datasources.datasource[i]['@attributes'].name,
             colcaption: final.workbook.datasources.datasource[i].column[j]['@attributes'].caption,
-            colname: final.workbook.datasources.datasource[i].column[j]['@attributes'].name,
+            //colname: final.workbook.datasources.datasource[i].column[j]['@attributes'].name,
             formula: formula
           });
         }
