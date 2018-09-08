@@ -2218,6 +2218,9 @@ table {
   border-collapse: separate;
   font-size: 12px;
   text-align: left;
+  table-layout: fixed;
+  word-wrap: break-word;
+  word-break: keep-all;
 }
 
 thead {

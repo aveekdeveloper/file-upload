@@ -4,6 +4,7 @@ import { UploadEvent, UploadFile } from 'ngx-file-drop';
 import {  FileUploader, FileSelectDirective } from 'ng2-file-upload/ng2-file-upload';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
+import * as JSZip from 'jszip';
 
 @Component({
   selector: 'app-root',
@@ -127,20 +128,51 @@ export class AppComponent implements OnInit{
     this.data.load(newData);
   }
 
+  processTWBfile(twbfile){
+    let reader = new FileReader();
+    reader.onload = () => {
+        let text: any = reader.result;
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(text, "application/xml");
+        var jsonText = JSON.stringify(this.xmlToJson(doc));
+        var final = JSON.parse(jsonText);
+        //console.log("final ===> " + final.workbook.datasources.datasource);
+        this.updateTable(final);
+    }
+    reader.readAsText(twbfile);
+  }
+
+  processTWBXfile(twbxfile){
+    var new_zip = new JSZip();
+    const xmlToJson = this.xmlToJson;
+    const updateTable = this.updateTable;
+    //Compose the twb file name inside the twbx
+    var filename = twbxfile.name.split('.')[0]+".twb";
+    new_zip.loadAsync(twbxfile).then((zip) => {
+       zip.file(filename).async("string").then((text) => {
+         var parser = new DOMParser();
+         var doc = parser.parseFromString(text, "application/xml");
+         var jsonText = JSON.stringify(this.xmlToJson(doc));
+         var final = JSON.parse(jsonText);
+         this.updateTable(final);
+       });
+    })
+  }
+
   openFile(event) {
     let input = event.target;
     for (var index = 0; index < input.files.length; index++) {
-      let reader = new FileReader();
-      reader.onload = () => {
-          let text: any = reader.result;
-          var parser = new DOMParser();
-          var doc = parser.parseFromString(text, "application/xml");
-          var jsonText = JSON.stringify(this.xmlToJson(doc));
-          var final = JSON.parse(jsonText);
-          //console.log("final ===> " + final.workbook.datasources.datasource);
-          this.updateTable(final);
+      var tableaufile = input.files[index].name;
+      if(tableaufile.split('.').pop() === 'twbx'){
+        console.log("Twbx file: "+tableaufile);
+        this.processTWBXfile(input.files[index]);
+      }else if(tableaufile.split('.').pop() === 'twb'){
+        console.log("Twb file:"+tableaufile);
+        this.processTWBfile(input.files[index])
+      }else{
+        console.log("Not tableau file");
+        continue;
       }
-      reader.readAsText(input.files[index]);
     };
   }
 
