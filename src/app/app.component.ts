@@ -4,7 +4,9 @@ import { UploadEvent, UploadFile } from 'ngx-file-drop';
 import {  FileUploader, FileSelectDirective } from 'ng2-file-upload/ng2-file-upload';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
+import { TableauService } from './tableau.service';
 import * as JSZip from 'jszip';
+import * as jsonata from 'jsonata';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +40,7 @@ export class AppComponent implements OnInit{
       /*colname: {
         title: 'Col Name'
       },*/
-      formula: {
+      colformula: {
         title: 'Formula',
         width: '60%',
         editor: {
@@ -63,11 +65,12 @@ export class AppComponent implements OnInit{
   };
 
   data: LocalDataSource = new LocalDataSource();
+  tableauService : TableauService;
 
   public files: UploadFile[] = [];
 
   // Changes XML to JSON
-  xmlToJson(xml) {
+  xmlToJson(xml){
 
     // Create the return object
     var obj = {};
@@ -75,10 +78,10 @@ export class AppComponent implements OnInit{
     if (xml.nodeType == 1) { // element
       // do attributes
       if (xml.attributes.length > 0) {
-      obj["@attributes"] = {};
+      obj["_attributes"] = {};
         for (var j = 0; j < xml.attributes.length; j++) {
           var attribute = xml.attributes.item(j);
-          obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+          obj["_attributes"][attribute.nodeName] = attribute.nodeValue;
         }
       }
     } else if (xml.nodeType == 3) { // text
@@ -105,27 +108,10 @@ export class AppComponent implements OnInit{
     return obj;
   };
 
-
   updateTable(final) {
-    let newData = [];
-    for(let i=0; i < final.workbook.datasources.datasource.length; i++) {
-      if (final.workbook.datasources.datasource[i] && final.workbook.datasources.datasource[i].column) {
-        for(let j=0; j < final.workbook.datasources.datasource[i].column.length; j++) {
-          let formula = '';
-          if (final.workbook.datasources.datasource[i].column[j]['calculation'] && final.workbook.datasources.datasource[i].column[j]['calculation']['@attributes'].formula) {
-            formula = final.workbook.datasources.datasource[i].column[j]['calculation']['@attributes'].formula;
-          }
-          newData.push({
-            dscaption: final.workbook.datasources.datasource[i]['@attributes'].caption,
-            //dsname: final.workbook.datasources.datasource[i]['@attributes'].name,
-            colcaption: final.workbook.datasources.datasource[i].column[j]['@attributes'].caption,
-            //colname: final.workbook.datasources.datasource[i].column[j]['@attributes'].name,
-            formula: formula
-          });
-        }
-      }
-    }
-    this.data.load(newData);
+    //save the data in TableauService
+    this.tableauService = new TableauService(final);
+    this.data.load(this.tableauService.getColumns());
   }
 
   processTWBfile(twbfile){
@@ -134,9 +120,8 @@ export class AppComponent implements OnInit{
         let text: any = reader.result;
         var parser = new DOMParser();
         var doc = parser.parseFromString(text, "application/xml");
-        var jsonText = JSON.stringify(this.xmlToJson(doc));
-        var final = JSON.parse(jsonText);
-        //console.log("final ===> " + final.workbook.datasources.datasource);
+        var final = this.xmlToJson(doc);
+
         this.updateTable(final);
     }
     reader.readAsText(twbfile);
