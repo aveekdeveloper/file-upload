@@ -23,9 +23,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/photon.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jszip.min.js"
+            ]
           },
           "configurations": {
             "production": {

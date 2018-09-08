@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { UploadEvent, UploadFile } from 'ngx-file-drop';
 import {  FileUploader, FileSelectDirective } from 'ng2-file-upload/ng2-file-upload';
 import { LocalDataSource } from 'ng2-smart-table';
+import { Angular5Csv } from 'angular5-csv/Angular5-csv';
+import * as JSZip from 'jszip';
 
 @Component({
   selector: 'app-root',
@@ -14,32 +16,59 @@ export class AppComponent implements OnInit{
   settings = {
     actions: {
       add: false,
-      edit: false,
+      edit: true,
       delete: false,
+      position: 'left',
+    },
+    edit: {
+      editButtonContent: '<i class="material-icons">create</i>',
+      saveButtonContent: '<i class="material-icons">save</i>',
+      cancelButtonContent: '<i class="material-icons">clear</i>',
     },
     columns: {
-      datasource: {
-        title: 'Datasource'
+      dscaption: {
+        title: 'DS Caption'
       },
-      Caption: {
-        title: 'Caption'
+      /*dsname: {
+        title: 'DS Name'
+      },*/
+      colcaption: {
+        title: 'Col Caption'
       },
-      name: {
-        title: 'Name'
-      },
+      /*colname: {
+        title: 'Col Name'
+      },*/
       formula: {
-        title: 'Formula'
+        title: 'Formula',
+        width: '60%',
+        editor: {
+          type: 'textarea'
+        }
+      },
+      comments: {
+        title: 'Description'
       }
+    },
+    pager: {
+      perPage: 30
     }
   };
 
-  data: LocalDataSource = new LocalDataSource();;
+  csvexportsettings = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalseparator: '.',
+    showLabels: true,
+    headers: ["Datasource Caption", "Datasource Name", "Col Caption","Col Name","Formula","Description"]
+  };
+
+  data: LocalDataSource = new LocalDataSource();
 
   public files: UploadFile[] = [];
- 
+
   // Changes XML to JSON
   xmlToJson(xml) {
-    
+
     // Create the return object
     var obj = {};
 
@@ -87,9 +116,10 @@ export class AppComponent implements OnInit{
             formula = final.workbook.datasources.datasource[i].column[j]['calculation']['@attributes'].formula;
           }
           newData.push({
-            datasource: final.workbook.datasources.datasource[i]['@attributes'].name,
-            Caption: final.workbook.datasources.datasource[i].column[j]['@attributes'].caption,
-            name: final.workbook.datasources.datasource[i].column[j]['@attributes'].name,
+            dscaption: final.workbook.datasources.datasource[i]['@attributes'].caption,
+            //dsname: final.workbook.datasources.datasource[i]['@attributes'].name,
+            colcaption: final.workbook.datasources.datasource[i].column[j]['@attributes'].caption,
+            //colname: final.workbook.datasources.datasource[i].column[j]['@attributes'].name,
             formula: formula
           });
         }
@@ -98,27 +128,68 @@ export class AppComponent implements OnInit{
     this.data.load(newData);
   }
 
+  processTWBfile(twbfile){
+    let reader = new FileReader();
+    reader.onload = () => {
+        let text: any = reader.result;
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(text, "application/xml");
+        var jsonText = JSON.stringify(this.xmlToJson(doc));
+        var final = JSON.parse(jsonText);
+        //console.log("final ===> " + final.workbook.datasources.datasource);
+        this.updateTable(final);
+    }
+    reader.readAsText(twbfile);
+  }
+
+  processTWBXfile(twbxfile){
+    var new_zip = new JSZip();
+    const xmlToJson = this.xmlToJson;
+    const updateTable = this.updateTable;
+    //Compose the twb file name inside the twbx
+    var filename = twbxfile.name.split('.')[0]+".twb";
+    new_zip.loadAsync(twbxfile).then((zip) => {
+       zip.file(filename).async("string").then((text) => {
+         var parser = new DOMParser();
+         var doc = parser.parseFromString(text, "application/xml");
+         var jsonText = JSON.stringify(this.xmlToJson(doc));
+         var final = JSON.parse(jsonText);
+         this.updateTable(final);
+       });
+    })
+  }
+
   openFile(event) {
     let input = event.target;
     for (var index = 0; index < input.files.length; index++) {
-      let reader = new FileReader();
-      reader.onload = () => {
-          let text: any = reader.result;
-          var parser = new DOMParser();
-          var doc = parser.parseFromString(text, "application/xml");
-          var jsonText = JSON.stringify(this.xmlToJson(doc));
-          var final = JSON.parse(jsonText);
-          console.log("final ===> " + final.workbook.datasources.datasource);
-          this.updateTable(final);
+      var tableaufile = input.files[index].name;
+      if(tableaufile.split('.').pop() === 'twbx'){
+        console.log("Twbx file: "+tableaufile);
+        this.processTWBXfile(input.files[index]);
+      }else if(tableaufile.split('.').pop() === 'twb'){
+        console.log("Twb file:"+tableaufile);
+        this.processTWBfile(input.files[index])
+      }else{
+        console.log("Not tableau file");
+        continue;
       }
-      reader.readAsText(input.files[index]);
     };
   }
- 
+
+  exportDataToCsv(){
+    const settings = this.csvexportsettings;
+    this.data.getAll().then(function(result){
+      new Angular5Csv(result, 'Twb Report',settings);
+    }, function(err){
+      alert("No data to export");
+    })
+
+  }
+
   public fileOver(event){
     console.log(event);
   }
- 
+
   public fileLeave(event){
     console.log(event);
   }
