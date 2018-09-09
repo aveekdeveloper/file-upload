@@ -1,19 +1,32 @@
 <header class="toolbar toolbar-header">
-
+  <h1 class="title">Tableau Analyser</h1>
   <div class="toolbar-actions">
 
     <input class="btn btn-default" (change)='openFile($event)' type='file' accept="text/twb" />
 
-    <button class="btn btn-default" (click)="exportDataToCsv()">
+    <button class="btn btn-default pull-right" (click)="exportDataToCsv()">
       <span class="icon icon-level-down"></span>
       Download CSV
     </button>
   </div>
 </header>
 
-<div class="window-content">
-  <div class="ngsmarttablediv table-striped">
-    <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
+<div class="window-content" style="min-width:800px; min-height:90vh;">
+
+<div class="pane-group">
+  <div class="pane-sm sidebar">
+    <app-menu></app-menu>
+  </div>
+
+  <div class="pane">
+    <div class="ngsmarttablediv table-striped">
+      <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
+    </div>
   </div>
 
 </div>
+</div>
+
+
+<footer class="toolbar toolbar-footer">
+</footer>

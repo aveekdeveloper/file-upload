@@ -23,9 +23,9 @@ export class AppComponent implements OnInit{
       position: 'left',
     },
     edit: {
-      editButtonContent: '<i class="material-icons">create</i>',
-      saveButtonContent: '<i class="material-icons">save</i>',
-      cancelButtonContent: '<i class="material-icons">clear</i>',
+      editButtonContent: '<div class="btn btn-form btn-default"> <span class="icon icon-pencil"></span></div>',
+      saveButtonContent: '<div class="btn btn-form btn-default"> <span class="icon icon-check"></span> </div> ',
+      cancelButtonContent: '<div class="btn btn-form btn-default"> <span class="icon icon-cancel"></span> </div>',
     },
     columns: {
       dscaption: {
@@ -52,7 +52,8 @@ export class AppComponent implements OnInit{
       }
     },
     pager: {
-      perPage: 30
+      display: false
+      //perPage: 20
     }
   };
 

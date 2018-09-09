@@ -9,10 +9,12 @@ import { FileDropModule } from 'ngx-file-drop';
 // import { fileUploadModule} from 'ng2-file-upload';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
