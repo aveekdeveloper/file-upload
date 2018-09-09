@@ -15,13 +15,26 @@
 
 <div class="pane-group">
   <div class="pane-sm sidebar">
+    <nav class="nav-group">
+    <h5 class="nav-group-title">Views</h5>
+    <span class="nav-group-item" (click)="showTree = false" [ngClass]="!showTree ? 'active' : ''">
+      <span class="icon icon-doc-text"></span>
+      Table view
+    </span>
+    <span class="nav-group-item" (click)="showTree = true" [ngClass]="showTree ? 'active' : ''">
+      <span class="icon icon-flow-tree"></span>
+      Analysis View
+    </span>
     <app-menu></app-menu>
+    </nav>
   </div>
 
   <div class="pane">
-    <div class="ngsmarttablediv table-striped">
+    <div *ngIf="!showTree;" class="ngsmarttablediv table-striped">
       <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
     </div>
+
+    <div *ngIf="showTree;">Tree view</div>
   </div>
 
 </div>

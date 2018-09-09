@@ -27,30 +27,7 @@ export class AppComponent implements OnInit{
       saveButtonContent: '<div class="btn btn-form btn-default"> <span class="icon icon-check"></span> </div> ',
       cancelButtonContent: '<div class="btn btn-form btn-default"> <span class="icon icon-cancel"></span> </div>',
     },
-    columns: {
-      dscaption: {
-        title: 'DS Caption'
-      },
-      /*dsname: {
-        title: 'DS Name'
-      },*/
-      colcaption: {
-        title: 'Col Caption'
-      },
-      /*colname: {
-        title: 'Col Name'
-      },*/
-      colformula: {
-        title: 'Formula',
-        width: '60%',
-        editor: {
-          type: 'textarea'
-        }
-      },
-      comments: {
-        title: 'Description'
-      }
-    },
+
     pager: {
       display: false
       //perPage: 20
@@ -109,10 +86,30 @@ export class AppComponent implements OnInit{
     return obj;
   };
 
+  //Add all fields to columns
+  generateColumnSettings(dat){
+    var columnSettings = {};
+    for (var i=0; i< dat.length;i++){
+      var keys = Object.keys(dat[i]);
+      for (var j=0 ;j< keys.length ;j++){
+        columnSettings[keys[j]] = {
+          'title' : keys[j]
+        }
+      }
+    }
+    return columnSettings;
+  }
+
   updateTable(final) {
     //save the data in TableauService
     this.tableauService = new TableauService(final);
-    this.data.load(this.tableauService.getColumns());
+    var data = this.tableauService.getColumns();
+    this.settings.columns = Object.assign({},this.generateColumnSettings(data));
+
+    //Hack to force Angular to reload the ng2 smart table,
+    //angular doesn't call ngOnchange on partial data change
+    this.settings = JSON.parse(JSON.stringify(this.settings));
+    this.data.load(data);
   }
 
   processTWBfile(twbfile){
