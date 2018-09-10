@@ -3,8 +3,10 @@
   <span class="icon icon-plus-squared"></span>
   Add new Recipe
 </a>
-<span class="nav-group-item active">
-  Columns
+
+
+<span class="nav-group-item" *ngFor="let recipe of recipes">
+   {{recipe}}
 </span>
 <span class="nav-group-item">
   DataSource details

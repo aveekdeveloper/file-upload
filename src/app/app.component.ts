@@ -14,7 +14,7 @@ import * as jsonata from 'jsonata';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  title = 'fileupload2';
+  title = 'TableauAnalyser';
   settings = {
     actions: {
       add: false,
@@ -22,6 +22,7 @@ export class AppComponent implements OnInit{
       delete: false,
       position: 'left',
     },
+    columns:{},
     edit: {
       editButtonContent: '<div class="btn btn-form btn-default"> <span class="icon icon-pencil"></span></div>',
       saveButtonContent: '<div class="btn btn-form btn-default"> <span class="icon icon-check"></span> </div> ',

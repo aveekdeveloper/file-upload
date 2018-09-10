@@ -6,6 +6,19 @@ import * as jsonata from 'jsonata';
 })
 export class TableauService {
   tabFile;
+  recipes= [
+  {
+    "name":"Get Columns",
+    "Description": "Get column details along with formula and datasource name",
+    "recipe": "$.workbook.datasources.datasource.($dsid:=$._attributes.name; $dscaption:=$._attributes.caption; $.column.{'dsid':$dsid,'dscaption':$dscaption,'colid':$._attributes.name,'colcaption':$._attributes.caption, 'colformula':$.calculation._attributes.formula})"
+  },
+  {
+    "name":"Get Datasources",
+    "Description":"Get basic DataSource details",
+    "recipe":"$.workbook.datasources.datasource.{'id':$._attributes.name, 'caption':$._attributes.caption}"
+  }
+  ];
+
 
   constructor(tabFile){
     this.tabFile = tabFile;
