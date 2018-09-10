@@ -7,12 +7,14 @@ import { TableauService } from '../tableau.service';
   styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
-  tabService : TableauService;
-  recipes : ['rice','daal'];
+  tabService : TableauService = new TableauService();
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  handleRecipeClick(){
+    alert('Function coming soon!');
+  }
 }

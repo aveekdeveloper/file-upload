@@ -20,8 +20,7 @@ export class TableauService {
   ];
 
 
-  constructor(tabFile){
-    this.tabFile = tabFile;
+  constructor(){
   }
 
   getTableauFile(){

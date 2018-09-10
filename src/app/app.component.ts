@@ -103,7 +103,8 @@ export class AppComponent implements OnInit{
 
   updateTable(final) {
     //save the data in TableauService
-    this.tableauService = new TableauService(final);
+    this.tableauService = new TableauService();
+    this.tableauService.setTableauFile(final);
     var data = this.tableauService.getColumns();
     this.settings.columns = Object.assign({},this.generateColumnSettings(data));
 
