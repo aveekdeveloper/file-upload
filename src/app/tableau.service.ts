@@ -8,14 +8,34 @@ export class TableauService {
   tabFile;
   recipes= [
   {
-    "name":"Get Columns",
-    "Description": "Get column details along with formula and datasource name",
-    "recipe": "$.workbook.datasources.datasource.($dsid:=$._attributes.name; $dscaption:=$._attributes.caption; $.column.{'dsid':$dsid,'dscaption':$dscaption,'colid':$._attributes.name,'colcaption':$._attributes.caption, 'colformula':$.calculation._attributes.formula})"
+    "name":"Calculated Formulas",
+    "description": "Get column details along with formula and datasource name",
+    "recipe": "$.workbook.datasources.datasource.($dsid:=$._attributes.name; $dscaption:=$._attributes.caption; $.column.{'DS id':$dsid,'DS caption':$dscaption,'colid':$._attributes.name,'colcaption':$._attributes.caption, 'colformula':$.calculation._attributes.formula})"
   },
   {
-    "name":"Get Datasources",
-    "Description":"Get basic DataSource details",
-    "recipe":"$.workbook.datasources.datasource.{'id':$._attributes.name, 'caption':$._attributes.caption}"
+    "name":"List Datasources",
+    "description":"Get basic DataSource details",
+    "recipe":"$.workbook.datasources.datasource.{'Datasource id':$._attributes.name, 'Datasource caption':$._attributes.caption}"
+  },
+  {
+    "name": "All datasource Columns",
+    "description": "Lists all columns in the datasource",
+    "recipe": "$.workbook.datasources.datasource.($dscaption := $._attributes.caption; $dsid := $._attributes.name; $.connection.'metadata-records'.'metadata-record'.{'dscaption':$dscaption,'dsid':$dsid,'remote-name':$.'remote-name'.'#text','local-name':$.'local-name'.'#text'})"
+  },
+  {
+    "name": "Only Extracted Columns",
+    "description": "Lists all extracted columns",
+    "recipe": "$.workbook.datasources.datasource.($dscaption := $._attributes.caption; $dsid := $._attributes.name; $.extract.connection.'metadata-records'.'metadata-record'.{'dscaption':$dscaption,'dsid':$dsid,'remote-name':$.'remote-name'.'#text','local-name':$.'local-name'.'#text'})"
+  },
+  {
+    "name": "Sheets and Columns",
+    "description": "Lists all sheets and columns used",
+    "recipe": "workbook.worksheets.worksheet.($sheetname := $._attributes.name; $.**.'datasource-dependencies'.($datasource:=$._attributes.datasource; $.column.{'sheet':$sheetname,'ds id':$datasource,'col':$._attributes.caption,'formula':$.calculation._attributes.formula}))"
+  },
+  {
+    "name": "Dashboards",
+    "description" : "Lists all dashboards in workbook",
+    "recipe": "workbook.dashboards.dashboard.($dashname := $._attributes.name; $.zones.**.name.{'dashboard': $dashname,'sheet':$})"
   }
   ];
 
@@ -37,7 +57,13 @@ export class TableauService {
   }
 
   getColumns(){
-    var expression = jsonata("$.workbook.datasources.datasource.($dsid:=$._attributes.name; $dscaption:=$._attributes.caption; $.column.{'dsid':$dsid,'dscaption':$dscaption,'colid':$._attributes.name,'colcaption':$._attributes.caption, 'colformula':$.calculation._attributes.formula})");
+    var expression = jsonata("$.workbook.datasources.datasource.($dscaption := $._attributes.caption; $dsid := $._attributes.name; $.connection.'metadata-records'.'metadata-record'.{'dscaption':$dscaption,'dsid':$dsid,'remote-name':$.'remote-name'.'#text','local-name':$.'local-name'.'#text'})");
+    return expression.evaluate(this.tabFile);
+  }
+
+  handleRecipe(recipe){
+    var expression = jsonata(recipe);
+    //console.log(expression.evaluate(this.tabFile));
     return expression.evaluate(this.tabFile);
   }
 

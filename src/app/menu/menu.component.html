@@ -1,10 +1,1 @@
-<h5 class="nav-group-title">Analysis Recipes</h5>
-<a class="nav-group-item" (click)="handleRecipeClick()">
-  <span class="icon icon-plus-squared"></span>
-  Add new Recipe
-</a>
 
-
-<span class="nav-group-item" *ngFor="let recipe of tabService.recipes" (click)="handleRecipeClick()">
-   {{recipe.name}}
-</span>

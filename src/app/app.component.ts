@@ -15,6 +15,7 @@ import * as jsonata from 'jsonata';
 })
 export class AppComponent implements OnInit{
   title = 'TableauAnalyser';
+  showTree : boolean;
   settings = {
     actions: {
       add: false,
@@ -44,7 +45,7 @@ export class AppComponent implements OnInit{
   };
 
   data: LocalDataSource = new LocalDataSource();
-  tableauService : TableauService;
+  tableauService : TableauService = new TableauService();
 
   public files: UploadFile[] = [];
 
@@ -103,9 +104,18 @@ export class AppComponent implements OnInit{
 
   updateTable(final) {
     //save the data in TableauService
-    this.tableauService = new TableauService();
     this.tableauService.setTableauFile(final);
     var data = this.tableauService.getColumns();
+    this.settings.columns = Object.assign({},this.generateColumnSettings(data));
+
+    //Hack to force Angular to reload the ng2 smart table,
+    //angular doesn't call ngOnchange on partial data change
+    this.settings = JSON.parse(JSON.stringify(this.settings));
+    this.data.load(data);
+  }
+
+  handleRecipeClick(recipe){
+    var data = this.tableauService.handleRecipe(recipe);
     this.settings.columns = Object.assign({},this.generateColumnSettings(data));
 
     //Hack to force Angular to reload the ng2 smart table,
@@ -181,5 +191,6 @@ export class AppComponent implements OnInit{
 
 
   ngOnInit() {
+    this.showTree = false;
  }
 }

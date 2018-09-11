@@ -25,6 +25,15 @@
       <span class="icon icon-flow-tree"></span>
       Analysis View
     </span>
+    <h5 class="nav-group-title">Recipes for analysis</h5>
+    <a class="nav-group-item typeform-share link" href="https://aveekmukherjee.typeform.com/to/BMmcLC" data-mode="popup" data-submit-close-delay="5" target="_blank">
+      <span class="icon icon-plus-squared"></span>
+      Request new Recipe
+    </a>
+
+    <span class="nav-group-item" *ngFor="let recipe of tableauService.recipes" (click)="handleRecipeClick(recipe.recipe)">
+       {{recipe.name}}
+    </span>
     <app-menu></app-menu>
     </nav>
   </div>
